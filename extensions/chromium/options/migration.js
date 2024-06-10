@@ -25,29 +25,30 @@ limitations under the License.
     return;
   }
 
-  getStorageNames(function (storageKeys) {
-    storageLocal.get(storageKeys, function (values) {
-      if (!values || !Object.keys(values).length) {
-        // No local storage - nothing to migrate.
-        // ... except possibly for a renamed preference name.
-        migrateRenamedStorage();
-        return;
-      }
-      migrateToSyncStorage(values);
-    });
-  });
+  // TODO_PEAKEE: disable storage migration from usage of XMLHttpRequest which is deprecated by Manifest v3
+  // getStorageNames(function (storageKeys) {
+  //   storageLocal.get(storageKeys, function (values) {
+  //     if (!values || !Object.keys(values).length) {
+  //       // No local storage - nothing to migrate.
+  //       // ... except possibly for a renamed preference name.
+  //       migrateRenamedStorage();
+  //       return;
+  //     }
+  //     migrateToSyncStorage(values);
+  //   });
+  // });
 
-  function getStorageNames(callback) {
-    var x = new XMLHttpRequest();
-    var schema_location = chrome.runtime.getManifest().storage.managed_schema;
-    x.open("get", chrome.runtime.getURL(schema_location));
-    x.onload = function () {
-      var storageKeys = Object.keys(x.response.properties);
-      callback(storageKeys);
-    };
-    x.responseType = "json";
-    x.send();
-  }
+  // function getStorageNames(callback) {
+  //   var x = new XMLHttpRequest();
+  //   var schema_location = chrome.runtime.getManifest().storage.managed_schema;
+  //   x.open("get", chrome.runtime.getURL(schema_location));
+  //   x.onload = function () {
+  //     var storageKeys = Object.keys(x.response.properties);
+  //     callback(storageKeys);
+  //   };
+  //   x.responseType = "json";
+  //   x.send();
+  // }
 
   // Save |values| to storage.sync and delete the values with that key from
   // storage.local.

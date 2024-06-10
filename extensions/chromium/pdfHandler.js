@@ -17,7 +17,7 @@ limitations under the License.
 
 "use strict";
 
-var VIEWER_URL = chrome.extension.getURL("content/web/viewer.html");
+var VIEWER_URL = chrome.runtime.getURL("content/web/viewer.html");
 
 function getViewerURL(pdf_url) {
   // |pdf_url| may contain a fragment such as "#page=2". That should be passed
@@ -148,7 +148,8 @@ chrome.webRequest.onHeadersReceived.addListener(
     urls: ["<all_urls>"],
     types: ["main_frame", "sub_frame"],
   },
-  ["blocking", "responseHeaders"]
+  ["responseHeaders"] // temporarily disable "blocking" by not available in manifest v3
+  // ["blocking", "responseHeaders"]
 );
 
 chrome.webRequest.onBeforeRequest.addListener(
@@ -165,7 +166,8 @@ chrome.webRequest.onBeforeRequest.addListener(
     urls: ["file://*/*.pdf", "file://*/*.PDF"],
     types: ["main_frame", "sub_frame"],
   },
-  ["blocking"]
+  [] // temporarily disable "blocking" by not available in manifest v3
+  // ["blocking"]
 );
 
 chrome.extension.isAllowedFileSchemeAccess(function (isAllowedAccess) {

@@ -17,8 +17,8 @@ limitations under the License.
 "use strict";
 
 (function ExtensionRouterClosure() {
-  var VIEWER_URL = chrome.extension.getURL("content/web/viewer.html");
-  var CRX_BASE_URL = chrome.extension.getURL("/");
+  var VIEWER_URL = chrome.runtime.getURL("content/web/viewer.html");
+  var CRX_BASE_URL = chrome.runtime.getURL("/");
 
   var schemes = [
     "http",
@@ -83,7 +83,8 @@ limitations under the License.
         return CRX_BASE_URL + scheme + "*";
       }),
     },
-    ["blocking"]
+    [] // temporarily disable "blocking" by not available in manifest v3
+    // ["blocking"]
   );
 
   // When session restore is used, viewer pages may be loaded before the
@@ -102,27 +103,27 @@ limitations under the License.
   );
   console.log("Set up extension URL router.");
 
-  Object.keys(localStorage).forEach(function (key) {
-    // The localStorage item is set upon unload by chromecom.js.
-    var parsedKey = /^unload-(\d+)-(true|false)-(.+)/.exec(key);
-    if (parsedKey) {
-      var timeStart = parseInt(parsedKey[1], 10);
-      var isHidden = parsedKey[2] === "true";
-      var url = parsedKey[3];
-      if (Date.now() - timeStart < 3000) {
-        // Is it a new item (younger than 3 seconds)? Assume that the extension
-        // just reloaded, so restore the tab (work-around for crbug.com/511670).
-        chrome.tabs.create({
-          url:
-            chrome.runtime.getURL("restoretab.html") +
-            "?" +
-            encodeURIComponent(url) +
-            "#" +
-            encodeURIComponent(localStorage.getItem(key)),
-          active: !isHidden,
-        });
-      }
-      localStorage.removeItem(key);
-    }
-  });
+  // Object.keys(localStorage).forEach(function (key) {
+  //   // The localStorage item is set upon unload by chromecom.js.
+  //   var parsedKey = /^unload-(\d+)-(true|false)-(.+)/.exec(key);
+  //   if (parsedKey) {
+  //     var timeStart = parseInt(parsedKey[1], 10);
+  //     var isHidden = parsedKey[2] === "true";
+  //     var url = parsedKey[3];
+  //     if (Date.now() - timeStart < 3000) {
+  //       // Is it a new item (younger than 3 seconds)? Assume that the extension
+  //       // just reloaded, so restore the tab (work-around for crbug.com/511670).
+  //       chrome.tabs.create({
+  //         url:
+  //           chrome.runtime.getURL("restoretab.html") +
+  //           "?" +
+  //           encodeURIComponent(url) +
+  //           "#" +
+  //           encodeURIComponent(localStorage.getItem(key)),
+  //         active: !isHidden,
+  //       });
+  //     }
+  //     localStorage.removeItem(key);
+  //   }
+  // });
 })();
