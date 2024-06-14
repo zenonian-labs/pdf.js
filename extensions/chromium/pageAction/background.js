@@ -27,19 +27,22 @@ limitations under the License.
     var url = /^chrome-extension:\/\/[a-p]{32}\/([^#]+)/.exec(displayUrl);
     if (url) {
       url = url[1];
-      chrome.pageAction.setPopup({
+      // chrome.pageAction.setPopup
+      chrome.action.setPopup({
         tabId,
         popup: "/pageAction/popup.html?file=" + encodeURIComponent(url),
       });
-      chrome.pageAction.show(tabId);
+      // chrome.pageAction.show
+      chrome.browserAction.show(tabId);
     } else {
       console.log("Unable to get PDF url from " + displayUrl);
     }
   }
 
   chrome.runtime.onMessage.addListener(function (message, sender) {
-    if (message === "showPageAction" && sender.tab) {
-      showPageAction(sender.tab.id, sender.tab.url);
-    }
+    // Peakee: disable by not use, and show is not available
+    // if (message === "showPageAction" && sender.tab) {
+    //   showPageAction(sender.tab.id, sender.tab.url);
+    // }
   });
 })();
