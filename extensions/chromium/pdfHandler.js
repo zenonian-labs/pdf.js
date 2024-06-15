@@ -123,7 +123,7 @@ function getHeadersWithContentDispositionAttachment(details) {
   return undefined;
 }
 
-chrome.webRequest.onHeadersReceived.addListener(
+chrome.webRequest?.onHeadersReceived.addListener(
   function (details) {
     if (details.method !== "GET") {
       // Don't intercept POST requests until http://crbug.com/104058 is fixed.
@@ -152,7 +152,7 @@ chrome.webRequest.onHeadersReceived.addListener(
   // ["blocking", "responseHeaders"]
 );
 
-chrome.webRequest.onBeforeRequest.addListener(
+chrome.webRequest?.onBeforeRequest.addListener(
   function (details) {
     if (isPdfDownloadable(details)) {
       return undefined;
